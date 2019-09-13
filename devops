@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+# Decide which docker-compose file to use
+COMPOSE_FILE="docker-compose.yml"
+
+# Disable pseudo-TTY allocation for CI (Jenkins)
+TTY=""
+
+if [ ! -z "$BUILD_NUMBER" ]; then
+    COMPOSE_FILE="docker-compose.ci.yml"
+    TTY="-T"
+fi
+
+COMPOSE="docker-compose -f $COMPOSE_FILE"
+
+if [ $# -gt 0 ];then
+    if [ "$1" == "art" ]; then
+        shift 1
+        $COMPOSE run --rm $TTY \
+            -w /var/www/html \
+            app \
+            php artisan "$@"
+    elif [ "$1" == "down" ]; then
+        shift 1
+        $COMPOSE -f docker-compose.test.yml down
+    elif [ "$1" == "generate-key" ]; then
+        shift 1
+        touch backend/.env
+        $COMPOSE run --rm --no-deps $TTY \
+            -w /var/www/html \
+            app \
+            php artisan key:generate
+        rm backend/.env
+    elif [ "$1" == "composer" ]; then
+        shift 1
+        $COMPOSE run --rm --no-deps $TTY \
+            -w /var/www/html \
+            app \
+            composer "$@"
+    elif [ "$1" == "run" ]; then
+        shift 1
+        SERVER=$1
+        shift 1
+        $COMPOSE run --rm $TTY \
+            --no-deps \
+            $SERVER \
+            "$@"
+    elif [ "$1" == "build-client" ]; then
+        shift 1
+        $COMPOSE run --rm $TTY \
+            -w /app \
+            --no-deps \
+            client \
+            npm run build
+        cp -R client/dist/* backend/public/
+        mv backend/public/index.html backend/resources/views/index.blade.php
+    elif [ "$1" == "test" ]; then
+        shift 1
+        $COMPOSE -f docker-compose.test.yml run --rm $TTY \
+            -w /var/www/html \
+            app \
+            sh -c "php artisan migrate:fresh && ./vendor/bin/phpunit $@"
+    else
+        $COMPOSE "$@"
+    fi
+else
+    $COMPOSE ps
+fi
+
