@@ -1,33 +1,46 @@
 <template>
-    <v-toolbar app color="brown lighten-4" light>
-        <v-toolbar-side-icon
+    <v-app-bar app color="brown lighten-4">
+        <v-app-bar-nav-icon
             class="hidden-md-and-up"
             @click="drawer = !drawer"
         >
-        </v-toolbar-side-icon>
+        </v-app-bar-nav-icon>
         <v-spacer class=hidden-md-and-up></v-spacer>
-        <v-toolbar-title>{{ appTitle }}</v-toolbar-title>
         <v-btn
-            class="hidden-sm-and-down"
-            flat
+            class="hidden-sm-and-down myBtn"
+            text
         >
             Menu
         </v-btn>
+        <v-divider class="verticalDivider" vertical inset></v-divider>
+        <!--<v-spacer class="hidden-sm-and-down"></v-spacer>-->
+        <v-toolbar-title>{{ appTitle }}</v-toolbar-title>
         <v-spacer class="hidden-sm-and-down"></v-spacer>
-        <v-btn class="hidden-sm-and-down" flat>SIGN IN</v-btn>
+        <v-btn class="hidden-sm-and-down" color="brown lighten-3">SIGN IN</v-btn>
+        <v-divider class="verticalDivider" vertical inset></v-divider>
         <v-btn class="hidden-sm-and-down" color="brown lighten-3">JOIN</v-btn>
-    </v-toolbar>
+    </v-app-bar>
 </template>
 
 <script>
 export default {
     name: 'AppNavigation',
-    data() {
-        return {
-            appTitle: 'D&D Character Generator'
-        }
+    props: {
+        appTitle: String
     }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+    >>>.verticalDivider {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    /*my hidden-sm-and-down*/
+    @media only screen and (max-width: 959px) {
+        .v-application .verticalDivider {
+            display: none !important;
+        }
+    }
+</style>
