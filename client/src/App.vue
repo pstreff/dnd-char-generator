@@ -1,7 +1,7 @@
 <template>
     <v-app
-            id="main"
-            :style="{background: $vuetify.theme.themes[theme].background}"
+        id="main"
+        :style="{ background: $vuetify.theme.themes[theme].background }"
     >
         <app-navigation></app-navigation>
         <v-content transition="slide-x-transition">
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import AppNavigation from "./components/AppNavigation";
+import AppNavigation from './components/AppNavigation';
 
 export default {
     name: 'App',
