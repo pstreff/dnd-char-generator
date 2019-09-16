@@ -1,5 +1,5 @@
 <template>
-    <v-toolbar app color="brown darken-4" dark>
+    <v-toolbar app color="brown lighten-4" light>
         <v-toolbar-side-icon></v-toolbar-side-icon>
         <v-toolbar-title>{{appTitle}}</v-toolbar-title>
         <v-btn flat>Menu</v-btn>
